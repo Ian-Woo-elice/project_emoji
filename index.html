@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Platform Emoji</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <div class="flex justify-between items-center py-16">
+                <h1 class="app-title">All Platform Emoji</h1>
+                <button id="theme-toggle" class="btn btn--secondary btn--sm" aria-label="테마 전환">
+                    <i class="fas fa-moon dark-icon"></i>
+                    <i class="fas fa-sun light-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-section py-16">
+            <div class="search-container">
+                <div class="form-group">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="emoji-search" class="form-control" placeholder="이모지 검색...">
+                    </div>
+                </div>
+                <div class="platform-filter mt-8">
+                    <h3 class="filter-title mb-8">플랫폼 필터:</h3>
+                    <div class="flex gap-8 flex-wrap">
+                        <label class="platform-checkbox">
+                            <input type="checkbox" id="android-filter" checked>
+                            <span class="platform-label">Android</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" id="ios-filter" checked>
+                            <span class="platform-label">iOS</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" id="windows-filter" checked>
+                            <span class="platform-label">Windows</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" id="macos-filter" checked>
+                            <span class="platform-label">macOS</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <nav class="categories-nav py-8">
+            <ul class="categories-list" id="categories-list">
+                <!-- 카테고리 탭이 동적으로 추가됩니다 -->
+            </ul>
+        </nav>
+
+        <section class="emoji-display" id="emoji-container">
+            <!-- 이모지가 동적으로 추가됩니다 -->
+        </section>
+    </main>
+
+    <!-- 이모지 상세 정보 모달 -->
+    <div id="emoji-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" aria-label="닫기">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="emoji-detail-header">
+                    <div class="emoji-large" id="modal-emoji"></div>
+                    <h2 id="modal-title" class="modal-title"></h2>
+                </div>
+                <div class="emoji-details">
+                    <div class="detail-row">
+                        <span class="detail-label">유니코드:</span>
+                        <div class="detail-value-wrapper">
+                            <span id="modal-unicode" class="detail-value"></span>
+                            <button id="copy-unicode" class="btn btn--secondary btn--sm" aria-label="유니코드 복사">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">버전:</span>
+                        <span id="modal-version" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">플랫폼 지원:</span>
+                        <div id="modal-platforms" class="platform-support"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="copy-emoji" class="btn btn--primary">이모지 복사</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 토스트 알림 -->
+    <div id="toast" class="toast hidden">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <span id="toast-message">복사되었습니다!</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
