@@ -584,9 +584,12 @@ function getFilteredCategories() {
   // 카테고리와 이모지 필터링
   return categories.map(category => {
     const filteredEmojis = category.emojis.filter(emoji => {
-      // 플랫폼 필터링 - 선택된 플랫폼 중 하나라도 지원하면 표시
-      const selectedPlatforms = Object.keys(filterState.platforms).filter(platform => filterState.platforms[platform]);
-      const platformMatch = selectedPlatforms.length === 0 || selectedPlatforms.some(platform => emoji.support[platform]);
+      // 플랫폼 필터링 - 선택한 모든 플랫폼에서 지원하는 이모지만 표시
+      const selectedPlatforms = Object.keys(filterState.platforms)
+        .filter(platform => filterState.platforms[platform]);
+      const platformMatch =
+        selectedPlatforms.length === 0 ||
+        selectedPlatforms.every(platform => emoji.support[platform]);
       
       // 검색어 필터링 - 대소문자 구분 없이 검색
       const searchText = filterState.searchText.toLowerCase().trim();
@@ -783,15 +786,31 @@ function toggleTheme() {
   saveThemePreference(newTheme);
 }
 
-// 테마 선호도 저장 (localStorage 대신 단순 변수 사용)
+// 테마 선호도 저장 (localStorage 사용)
 let currentTheme = 'light';
 
 function saveThemePreference(theme) {
   currentTheme = theme;
+  try {
+    localStorage.setItem('theme', theme);
+  } catch (e) {
+    console.error('테마 선호도 저장 실패:', e);
+  }
 }
 
 // 테마 선호도 로드
 function loadThemePreference() {
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-color-scheme', saved);
+      currentTheme = saved;
+      return;
+    }
+  } catch (e) {
+    console.error('테마 선호도 로드 실패:', e);
+  }
+
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.setAttribute('data-color-scheme', 'dark');
     currentTheme = 'dark';
