@@ -21,6 +21,14 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
+// U+ 시퀀스를 실제 이모지 문자열로 변환
+function unicodeStringToEmoji(str) {
+  return str
+    .split(' ')
+    .map(s => String.fromCodePoint(parseInt(s.replace('U+', ''), 16)))
+    .join('');
+}
+
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
   const res = await fetch('emoji.json');
@@ -133,13 +141,11 @@ function renderEmojis() {
       
       // 이모지 아이템 추가
       category.emojis.forEach(emoji => {
-        const isNew = parseFloat(emoji.version) >= 15.0;
         const emojiItem = document.createElement('div');
         emojiItem.className = 'emoji-item';
         emojiItem.setAttribute('data-emoji', JSON.stringify(emoji));
         emojiItem.innerHTML = `
           <span class="emoji-char">${emoji.emoji}</span>
-          ${isNew ? '<span class="new-badge">New</span>' : ''}
           <i class="fas fa-info-circle emoji-info" aria-hidden="true"></i>
         `;
         gridElement.appendChild(emojiItem);
@@ -211,7 +217,7 @@ function setupEventListeners() {
       } else {
         // 이모지 클릭 시 복사
         copyToClipboard(emoji.emoji);
-        showToast(`"${emoji.name}" 복사되었습니다!`);
+        showToast('복사됐어요!');
       }
     }
   });
@@ -237,7 +243,7 @@ function setupEventListeners() {
     elements.modal.copyEmoji.addEventListener('click', () => {
       const emoji = elements.modal.emoji.textContent;
       copyToClipboard(emoji);
-      showToast('이모지가 복사되었습니다!');
+      showToast('복사됐어요!');
     });
   }
 
@@ -245,8 +251,9 @@ function setupEventListeners() {
   if (elements.modal.copyUnicode) {
     elements.modal.copyUnicode.addEventListener('click', () => {
       const unicode = elements.modal.unicode.textContent;
-      copyToClipboard(unicode);
-      showToast('유니코드가 복사되었습니다!');
+      const emoji = unicodeStringToEmoji(unicode);
+      copyToClipboard(emoji);
+      showToast('복사됐어요!');
     });
   }
 
