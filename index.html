@@ -29,27 +29,6 @@
                         <input type="text" id="emoji-search" class="form-control" placeholder="이모지 검색...">
                     </div>
                 </div>
-                <div class="platform-filter mt-8">
-                    <h3 class="filter-title mb-8">플랫폼 필터:</h3>
-                    <div class="flex gap-8 flex-wrap">
-                        <label class="platform-checkbox">
-                            <input type="checkbox" id="android-filter" checked>
-                            <span class="platform-label">Android</span>
-                        </label>
-                        <label class="platform-checkbox">
-                            <input type="checkbox" id="ios-filter" checked>
-                            <span class="platform-label">iOS</span>
-                        </label>
-                        <label class="platform-checkbox">
-                            <input type="checkbox" id="windows-filter" checked>
-                            <span class="platform-label">Windows</span>
-                        </label>
-                        <label class="platform-checkbox">
-                            <input type="checkbox" id="macos-filter" checked>
-                            <span class="platform-label">macOS</span>
-                        </label>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -90,10 +69,6 @@
                         <span class="detail-label">버전:</span>
                         <span id="modal-version" class="detail-value"></span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">플랫폼 지원:</span>
-                        <div id="modal-platforms" class="platform-support"></div>
-                    </div>
                 </div>
                 <div class="modal-actions">
                     <button id="copy-emoji" class="btn btn--primary">이모지 복사</button>
@@ -102,11 +77,10 @@
         </div>
     </div>
 
-    <!-- 토스트 알림 -->
+    <!-- 복사 알림 모달 -->
     <div id="toast" class="toast hidden">
         <div class="toast-content">
-            <i class="fas fa-check-circle toast-icon"></i>
-            <span id="toast-message">복사되었습니다!</span>
+            <span id="toast-message">복사 완료</span>
         </div>
     </div>
 
