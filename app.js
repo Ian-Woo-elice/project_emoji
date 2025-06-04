@@ -12,12 +12,6 @@ async function loadEmojiData() {
 // 필터 상태 관리
 const filterState = {
   searchText: '',
-  platforms: {
-    Android: true,
-    iOS: true,
-    Windows: true,
-    macOS: true
-  },
   currentCategory: 'all'
 };
 
@@ -26,12 +20,6 @@ const elements = {
   emojiContainer: document.getElementById('emoji-container'),
   categoriesList: document.getElementById('categories-list'),
   searchInput: document.getElementById('emoji-search'),
-  platformFilters: {
-    Android: document.getElementById('android-filter'),
-    iOS: document.getElementById('ios-filter'),
-    Windows: document.getElementById('windows-filter'),
-    macOS: document.getElementById('macos-filter')
-  },
   modal: {
     container: document.getElementById('emoji-modal'),
     emoji: document.getElementById('modal-emoji'),
@@ -134,21 +122,14 @@ function getFilteredCategories() {
   // 카테고리와 이모지 필터링
   return categories.map(category => {
     const filteredEmojis = category.emojis.filter(emoji => {
-      // 플랫폼 필터링 - 선택한 모든 플랫폼에서 지원하는 이모지만 표시
-      const selectedPlatforms = Object.keys(filterState.platforms)
-        .filter(platform => filterState.platforms[platform]);
-      const platformMatch =
-        selectedPlatforms.length === 0 ||
-        selectedPlatforms.every(platform => emoji.support[platform]);
-      
       // 검색어 필터링 - 대소문자 구분 없이 검색
       const searchText = filterState.searchText.toLowerCase().trim();
-      const searchMatch = searchText === '' || 
+      const searchMatch = searchText === '' ||
         emoji.name.toLowerCase().includes(searchText) ||
         emoji.unicode.toLowerCase().includes(searchText) ||
         emoji.emoji.includes(filterState.searchText);
-      
-      return platformMatch && searchMatch;
+
+      return searchMatch;
     });
 
     return {
@@ -178,16 +159,6 @@ function setupEventListeners() {
     renderEmojis();
   });
 
-  // 플랫폼 필터
-  Object.keys(elements.platformFilters).forEach(platform => {
-    const filterElement = elements.platformFilters[platform];
-    if (filterElement) {
-      filterElement.addEventListener('change', (e) => {
-        filterState.platforms[platform] = e.target.checked;
-        renderEmojis();
-      });
-    }
-  });
 
   // 이모지 클릭 (복사)
   elements.emojiContainer.addEventListener('click', (e) => {

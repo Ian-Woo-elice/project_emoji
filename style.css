@@ -693,39 +693,6 @@ select.form-control {
   padding-left: var(--space-32);
 }
 
-.platform-filter {
-  display: flex;
-  flex-direction: column;
-}
-
-.filter-title {
-  font-size: var(--font-size-md);
-  margin-bottom: var(--space-8);
-  font-weight: var(--font-weight-medium);
-}
-
-.platform-checkbox {
-  display: flex;
-  align-items: center;
-  padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-full);
-  background-color: var(--color-secondary);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-standard);
-}
-
-.platform-checkbox:hover {
-  background-color: var(--color-secondary-hover);
-}
-
-.platform-checkbox input {
-  margin-right: var(--space-6);
-}
-
-.platform-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-}
 
 /* Categories Navigation */
 .categories-nav {
