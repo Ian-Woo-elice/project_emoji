@@ -21,6 +21,13 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
+// 트윗이 제공하는 형식으로 코드 포인트 문자열 반환
+function toCodePoint(emoji) {
+  return Array.from(emoji)
+    .map(ch => ch.codePointAt(0).toString(16))
+    .join('-');
+}
+
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
   const res = await fetch('emoji.json');
@@ -41,7 +48,8 @@ async function loadEmojiData() {
       emoji: item.emoji,
       name: item.description,
       unicode: toUnicodeString(item.emoji),
-      version: item.unicode_version || ''
+      version: item.unicode_version || '',
+      categoryId: map.id
     });
   });
 
@@ -204,8 +212,7 @@ function setupEventListeners() {
         showEmojiModal(emoji);
       } else {
         // 이모지 클릭 시 복사 후 표시
-        copyToClipboard(emoji.emoji);
-        showCopyIndicator(emojiItem);
+        copyEmoji(emoji, emojiItem);
       }
     }
   });
@@ -319,6 +326,30 @@ function showCopyIndicator(emojiItem) {
   }, 1000);
 }
 
+// 이모지를 클립보드에 복사
+async function copyEmoji(emoji, emojiItem) {
+  if (
+    emoji.categoryId === 'flags' &&
+    navigator.clipboard &&
+    navigator.clipboard.write
+  ) {
+    const code = toCodePoint(emoji.emoji);
+    const url = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${code}.svg`;
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob })
+      ]);
+    } catch (err) {
+      copyToClipboard(emoji.emoji);
+    }
+  } else {
+    copyToClipboard(emoji.emoji);
+  }
+  showCopyIndicator(emojiItem);
+}
+
 
 // 테마 전환
 function toggleTheme() {
@@ -368,4 +399,4 @@ function loadThemePreference() {
 // 앱 초기화
 document.addEventListener('DOMContentLoaded', init);
 
-export { showCopyIndicator, toggleTheme, loadThemePreference };
+export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
