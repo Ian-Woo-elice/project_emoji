@@ -69,10 +69,6 @@ const elements = {
     copyEmoji: document.getElementById('copy-emoji'),
     copyUnicode: document.getElementById('copy-unicode')
   },
-  toast: {
-    container: document.getElementById('toast'),
-    message: document.getElementById('toast-message')
-  },
   themeToggle: document.getElementById('theme-toggle')
 };
 
@@ -133,13 +129,11 @@ function renderEmojis() {
       
       // 이모지 아이템 추가
       category.emojis.forEach(emoji => {
-        const isNew = parseFloat(emoji.version) >= 15.0;
         const emojiItem = document.createElement('div');
         emojiItem.className = 'emoji-item';
         emojiItem.setAttribute('data-emoji', JSON.stringify(emoji));
         emojiItem.innerHTML = `
           <span class="emoji-char">${emoji.emoji}</span>
-          ${isNew ? '<span class="new-badge">New</span>' : ''}
           <i class="fas fa-info-circle emoji-info" aria-hidden="true"></i>
         `;
         gridElement.appendChild(emojiItem);
@@ -209,9 +203,9 @@ function setupEventListeners() {
         e.stopPropagation();
         showEmojiModal(emoji);
       } else {
-        // 이모지 클릭 시 복사
+        // 이모지 클릭 시 복사 후 표시
         copyToClipboard(emoji.emoji);
-        showToast(`"${emoji.name}" 복사되었습니다!`);
+        showCopyIndicator(emojiItem);
       }
     }
   });
@@ -237,7 +231,6 @@ function setupEventListeners() {
     elements.modal.copyEmoji.addEventListener('click', () => {
       const emoji = elements.modal.emoji.textContent;
       copyToClipboard(emoji);
-      showToast('이모지가 복사되었습니다!');
     });
   }
 
@@ -246,7 +239,6 @@ function setupEventListeners() {
     elements.modal.copyUnicode.addEventListener('click', () => {
       const unicode = elements.modal.unicode.textContent;
       copyToClipboard(unicode);
-      showToast('유니코드가 복사되었습니다!');
     });
   }
 
@@ -315,25 +307,27 @@ function fallbackCopy(text) {
   document.body.removeChild(textArea);
 }
 
-// 토스트 메시지 표시
-function showToast(message) {
-  if (elements.toast.container && elements.toast.message) {
-    elements.toast.message.textContent = message;
-    elements.toast.container.classList.remove('hidden');
-    
-    setTimeout(() => {
-      elements.toast.container.classList.add('hidden');
-    }, 2000);
-  }
+// 클릭한 이모지 위에 복사 완료 표시
+function showCopyIndicator(emojiItem) {
+  const indicator = document.createElement('div');
+  indicator.className = 'copy-indicator';
+  indicator.textContent = '복사 완료';
+  emojiItem.appendChild(indicator);
+
+  setTimeout(() => {
+    emojiItem.removeChild(indicator);
+  }, 1000);
 }
+
 
 // 테마 전환
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-color-scheme') || 'light';
   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  
+
   document.documentElement.setAttribute('data-color-scheme', newTheme);
   saveThemePreference(newTheme);
+  updateThemeToggleIcon(newTheme);
 }
 
 // 테마 선호도 저장 (localStorage 대신 단순 변수 사용)
@@ -341,6 +335,22 @@ let currentTheme = 'light';
 
 function saveThemePreference(theme) {
   currentTheme = theme;
+}
+
+// 테마 버튼 아이콘 업데이트
+function updateThemeToggleIcon(theme) {
+  if (!elements.themeToggle) return;
+  const moon = elements.themeToggle.querySelector('.fa-moon');
+  const sun = elements.themeToggle.querySelector('.fa-sun');
+  if (moon && sun) {
+    if (theme === 'dark') {
+      moon.style.display = 'none';
+      sun.style.display = 'block';
+    } else {
+      moon.style.display = 'block';
+      sun.style.display = 'none';
+    }
+  }
 }
 
 // 테마 선호도 로드
@@ -352,7 +362,10 @@ function loadThemePreference() {
     document.documentElement.setAttribute('data-color-scheme', 'light');
     currentTheme = 'light';
   }
+  updateThemeToggleIcon(currentTheme);
 }
 
 // 앱 초기화
 document.addEventListener('DOMContentLoaded', init);
+
+export { showCopyIndicator, toggleTheme, loadThemePreference };
