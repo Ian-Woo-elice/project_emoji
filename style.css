@@ -888,26 +888,6 @@ select.form-control {
   border-radius: var(--radius-sm);
 }
 
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-8);
-}
-
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-}
-
-  background-color: rgba(var(--color-success-rgb), var(--status-bg-opacity));
-  color: var(--color-success);
-  border: 1px solid rgba(var(--color-success-rgb), var(--status-border-opacity));
-}
-
-  background-color: rgba(var(--color-error-rgb), var(--status-bg-opacity));
-  color: var(--color-error);
-  border: 1px solid rgba(var(--color-error-rgb), var(--status-border-opacity));
-}
 
 .modal-actions {
   display: flex;
