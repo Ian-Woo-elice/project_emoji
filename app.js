@@ -1,43 +1,39 @@
 let emojiData = { emojiCategories: [] };
 
-// 원격 데이터(Unicode Emoji List v16.0) 로드, 실패 시 로컬 데이터 사용
+// 전체 이모지 데이터 로드
 async function loadEmojiData() {
-  const remoteUrl =
-    "https://cdn.jsdelivr.net/npm/unicode-emoji-json@16.0.0/data-by-group.json";
-
   try {
-    const remoteRes = await fetch(remoteUrl);
-    if (!remoteRes.ok) throw new Error("Remote fetch failed");
-    const raw = await remoteRes.json();
+    const res = await fetch('full_emoji.json');
+    const raw = await res.json();
     emojiData = convertRemoteData(raw);
-  } catch (e) {
-    console.warn("원격 데이터 로드 실패, 로컬 데이터 사용:", e);
+  } catch (err) {
+    console.error('이모지 데이터를 불러오지 못했습니다:', err);
+    // 최후의 수단으로 기존 emoji.json 사용
     try {
-      const localRes = await fetch("emoji.json");
-      emojiData = await localRes.json();
-    } catch (err) {
-      console.error("이모지 데이터를 불러오지 못했습니다:", err);
+      const fallbackRes = await fetch('emoji.json');
+      emojiData = await fallbackRes.json();
+    } catch (e) {
+      console.error('로컬 데이터 로드 실패:', e);
     }
   }
 }
 
 function convertRemoteData(raw) {
-  const categories = [];
-  Object.keys(raw).forEach((group) => {
-    const id = group.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    const cat = { id, name: group, emojis: [] };
-    Object.values(raw[group]).forEach((list) => {
-      list.forEach((e) => {
-        cat.emojis.push({
-          emoji: e.emoji,
-          name: e.name,
-          unicode: `U+${e.codepoint}`,
-          version: e.version,
-          support: { Android: true, iOS: true, Windows: true, macOS: true },
-        });
-      });
+  const categories = raw.map(group => {
+    const id = group.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const emojis = group.emojis.map(e => {
+      const code = [...e.emoji]
+        .map(ch => 'U+' + ch.codePointAt(0).toString(16).toUpperCase())
+        .join(' ');
+      return {
+        emoji: e.emoji,
+        name: e.name,
+        unicode: code,
+        version: e.unicode_version || e.emoji_version,
+        support: { Android: true, iOS: true, Windows: true, macOS: true },
+      };
     });
-    categories.push(cat);
+    return { id, name: group.name, emojis };
   });
   return { emojiCategories: categories };
 }
