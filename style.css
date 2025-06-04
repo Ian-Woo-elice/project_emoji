@@ -947,20 +947,20 @@ select.form-control {
     height: 45px;
     font-size: var(--font-size-lg);
   }
-  
+
   .app-title {
     font-size: var(--font-size-xl);
   }
-  
+
   .detail-row {
     flex-direction: column;
   }
-  
+
   .detail-label {
     width: 100%;
     margin-bottom: var(--space-4);
   }
-  
+
   .emoji-large {
     font-size: 3rem;
   }
@@ -976,11 +976,11 @@ select.form-control {
     font-size: var(--font-size-lg);
     padding: var(--space-2);
   }
-  
+
   .modal-content {
     padding: var(--space-16);
   }
-  
+
   .emoji-large {
     font-size: 2.5rem;
   }
