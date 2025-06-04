@@ -1,12 +1,45 @@
 let emojiData = { emojiCategories: [] };
 
+// 원격 데이터(Unicode Emoji List v16.0) 로드, 실패 시 로컬 데이터 사용
 async function loadEmojiData() {
+  const remoteUrl =
+    "https://cdn.jsdelivr.net/npm/unicode-emoji-json@16.0.0/data-by-group.json";
+
   try {
-    const res = await fetch("emoji.json");
-    emojiData = await res.json();
+    const remoteRes = await fetch(remoteUrl);
+    if (!remoteRes.ok) throw new Error("Remote fetch failed");
+    const raw = await remoteRes.json();
+    emojiData = convertRemoteData(raw);
   } catch (e) {
-    console.error("이모지 데이터를 불러오지 못했습니다:", e);
+    console.warn("원격 데이터 로드 실패, 로컬 데이터 사용:", e);
+    try {
+      const localRes = await fetch("emoji.json");
+      emojiData = await localRes.json();
+    } catch (err) {
+      console.error("이모지 데이터를 불러오지 못했습니다:", err);
+    }
   }
+}
+
+function convertRemoteData(raw) {
+  const categories = [];
+  Object.keys(raw).forEach((group) => {
+    const id = group.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const cat = { id, name: group, emojis: [] };
+    Object.values(raw[group]).forEach((list) => {
+      list.forEach((e) => {
+        cat.emojis.push({
+          emoji: e.emoji,
+          name: e.name,
+          unicode: `U+${e.codepoint}`,
+          version: e.version,
+          support: { Android: true, iOS: true, Windows: true, macOS: true },
+        });
+      });
+    });
+    categories.push(cat);
+  });
+  return { emojiCategories: categories };
 }
 
 // 필터 상태 관리
