@@ -21,6 +21,14 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
+// U+ 시퀀스를 실제 이모지 문자열로 변환
+function unicodeStringToEmoji(str) {
+  return str
+    .split(' ')
+    .map(s => String.fromCodePoint(parseInt(s.replace('U+', ''), 16)))
+    .join('');
+}
+
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
   const res = await fetch('emoji.json');
@@ -41,8 +49,7 @@ async function loadEmojiData() {
       emoji: item.emoji,
       name: item.description,
       unicode: toUnicodeString(item.emoji),
-      version: item.unicode_version || '',
-      support: { Android: true, iOS: true, Windows: true, macOS: true }
+      version: item.unicode_version || ''
     });
   });
 
@@ -52,12 +59,6 @@ async function loadEmojiData() {
 // 필터 상태 관리
 const filterState = {
   searchText: '',
-  platforms: {
-    Android: true,
-    iOS: true,
-    Windows: true,
-    macOS: true
-  },
   currentCategory: 'all'
 };
 
@@ -66,19 +67,12 @@ const elements = {
   emojiContainer: document.getElementById('emoji-container'),
   categoriesList: document.getElementById('categories-list'),
   searchInput: document.getElementById('emoji-search'),
-  platformFilters: {
-    Android: document.getElementById('android-filter'),
-    iOS: document.getElementById('ios-filter'),
-    Windows: document.getElementById('windows-filter'),
-    macOS: document.getElementById('macos-filter')
-  },
   modal: {
     container: document.getElementById('emoji-modal'),
     emoji: document.getElementById('modal-emoji'),
     title: document.getElementById('modal-title'),
     unicode: document.getElementById('modal-unicode'),
     version: document.getElementById('modal-version'),
-    platforms: document.getElementById('modal-platforms'),
     close: document.getElementById('modal-close'),
     copyEmoji: document.getElementById('copy-emoji'),
     copyUnicode: document.getElementById('copy-unicode')
@@ -147,13 +141,11 @@ function renderEmojis() {
       
       // 이모지 아이템 추가
       category.emojis.forEach(emoji => {
-        const isNew = parseFloat(emoji.version) >= 15.0;
         const emojiItem = document.createElement('div');
         emojiItem.className = 'emoji-item';
         emojiItem.setAttribute('data-emoji', JSON.stringify(emoji));
         emojiItem.innerHTML = `
           <span class="emoji-char">${emoji.emoji}</span>
-          ${isNew ? '<span class="new-badge">New</span>' : ''}
           <i class="fas fa-info-circle emoji-info" aria-hidden="true"></i>
         `;
         gridElement.appendChild(emojiItem);
@@ -174,18 +166,14 @@ function getFilteredCategories() {
   // 카테고리와 이모지 필터링
   return categories.map(category => {
     const filteredEmojis = category.emojis.filter(emoji => {
-      // 플랫폼 필터링 - 선택된 플랫폼 중 하나라도 지원하면 표시
-      const selectedPlatforms = Object.keys(filterState.platforms).filter(platform => filterState.platforms[platform]);
-      const platformMatch = selectedPlatforms.length === 0 || selectedPlatforms.some(platform => emoji.support[platform]);
-      
       // 검색어 필터링 - 대소문자 구분 없이 검색
       const searchText = filterState.searchText.toLowerCase().trim();
-      const searchMatch = searchText === '' || 
+      const searchMatch = searchText === '' ||
         emoji.name.toLowerCase().includes(searchText) ||
         emoji.unicode.toLowerCase().includes(searchText) ||
         emoji.emoji.includes(filterState.searchText);
-      
-      return platformMatch && searchMatch;
+
+      return searchMatch;
     });
 
     return {
@@ -215,16 +203,6 @@ function setupEventListeners() {
     renderEmojis();
   });
 
-  // 플랫폼 필터
-  Object.keys(elements.platformFilters).forEach(platform => {
-    const filterElement = elements.platformFilters[platform];
-    if (filterElement) {
-      filterElement.addEventListener('change', (e) => {
-        filterState.platforms[platform] = e.target.checked;
-        renderEmojis();
-      });
-    }
-  });
 
   // 이모지 클릭 (복사)
   elements.emojiContainer.addEventListener('click', (e) => {
@@ -239,7 +217,7 @@ function setupEventListeners() {
       } else {
         // 이모지 클릭 시 복사
         copyToClipboard(emoji.emoji);
-        showToast(`"${emoji.name}" 복사되었습니다!`);
+        showToast('복사 완료');
       }
     }
   });
@@ -265,7 +243,7 @@ function setupEventListeners() {
     elements.modal.copyEmoji.addEventListener('click', () => {
       const emoji = elements.modal.emoji.textContent;
       copyToClipboard(emoji);
-      showToast('이모지가 복사되었습니다!');
+      showToast('복사 완료');
     });
   }
 
@@ -273,8 +251,9 @@ function setupEventListeners() {
   if (elements.modal.copyUnicode) {
     elements.modal.copyUnicode.addEventListener('click', () => {
       const unicode = elements.modal.unicode.textContent;
-      copyToClipboard(unicode);
-      showToast('유니코드가 복사되었습니다!');
+      const emoji = unicodeStringToEmoji(unicode);
+      copyToClipboard(emoji);
+      showToast('복사 완료');
     });
   }
 
@@ -299,15 +278,6 @@ function showEmojiModal(emoji) {
   elements.modal.title.textContent = emoji.name;
   elements.modal.unicode.textContent = emoji.unicode;
   elements.modal.version.textContent = `Emoji ${emoji.version}`;
-  
-  // 플랫폼 지원 정보 표시
-  elements.modal.platforms.innerHTML = '';
-  Object.keys(emoji.support).forEach(platform => {
-    const badge = document.createElement('span');
-    badge.className = `platform-badge ${emoji.support[platform] ? 'platform-supported' : 'platform-unsupported'}`;
-    badge.textContent = platform;
-    elements.modal.platforms.appendChild(badge);
-  });
   
   elements.modal.container.classList.remove('hidden');
 }
