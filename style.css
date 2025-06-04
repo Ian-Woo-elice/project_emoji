@@ -889,6 +889,18 @@ select.form-control {
   font-size: var(--font-size-lg);
 }
 
+/* 필요한 경우 별도 원형 알림 아이콘 스타일 */
+.toast-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
 .dark-icon {
   display: block;
 }
@@ -915,25 +927,20 @@ select.form-control {
   .emoji-grid {
     grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
   }
-
   .emoji-item {
     height: 45px;
     font-size: var(--font-size-lg);
   }
-
   .app-title {
     font-size: var(--font-size-xl);
   }
-
   .detail-row {
     flex-direction: column;
   }
-
   .detail-label {
     width: 100%;
     margin-bottom: var(--space-4);
   }
-
   .emoji-large {
     font-size: 3rem;
   }
@@ -943,17 +950,14 @@ select.form-control {
   .emoji-grid {
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   }
-
   .emoji-item {
     height: 40px;
     font-size: var(--font-size-lg);
     padding: var(--space-2);
   }
-
   .modal-content {
     padding: var(--space-16);
   }
-
   .emoji-large {
     font-size: 2.5rem;
   }
