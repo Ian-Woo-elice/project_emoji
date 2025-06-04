@@ -213,6 +213,8 @@ function setupEventListeners() {
       } else {
         // 이모지 클릭 시 복사 후 표시
         copyEmoji(emoji, emojiItem);
+        copyToClipboard(emoji.emoji);
+        showCopyIndicator(emojiItem);
       }
     }
   });
@@ -400,3 +402,5 @@ function loadThemePreference() {
 document.addEventListener('DOMContentLoaded', init);
 
 export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
+export { showCopyIndicator, toggleTheme, loadThemePreference };
+

@@ -792,6 +792,9 @@ select.form-control {
   pointer-events: none;
   white-space: nowrap;
   animation: fade-out 1s forwards;
+  opacity: 0;
+  animation: fade-out var(--duration-normal) forwards;
+
 }
 
 @keyframes fade-out {
