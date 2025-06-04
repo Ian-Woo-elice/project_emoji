@@ -894,7 +894,7 @@ select.form-control {
   justify-content: flex-end;
 }
 
-/* Copy notification modal */
+/* Copy notification overlay */
 .toast {
   position: fixed;
   top: 0;
