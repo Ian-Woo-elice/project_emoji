@@ -1,4 +1,3 @@
-
 :root {
   /* Colors */
   --color-background: rgba(252, 252, 249, 1);
@@ -355,30 +354,10 @@ pre code {
   background: var(--color-secondary-active);
 }
 
-.btn--outline {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-}
-
-.btn--outline:hover {
-  background: var(--color-secondary);
-}
-
 .btn--sm {
   padding: var(--space-4) var(--space-12);
   font-size: var(--font-size-sm);
   border-radius: var(--radius-sm);
-}
-
-.btn--lg {
-  padding: var(--space-10) var(--space-20);
-  font-size: var(--font-size-lg);
-  border-radius: var(--radius-md);
-}
-
-.btn--full-width {
-  width: 100%;
 }
 
 .btn:disabled {
@@ -644,7 +623,6 @@ select.form-control {
 }
 
 /* Dark mode specifics */
-[data-color-scheme="dark"] .btn--outline {
   border: 1px solid var(--color-border-secondary);
 }
 
@@ -779,7 +757,6 @@ select.form-control {
   border-color: var(--color-primary);
 }
 
-
 .emoji-info {
   position: absolute;
   bottom: 2px;
@@ -887,7 +864,6 @@ select.form-control {
   padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-sm);
 }
-
 
 .modal-actions {
   display: flex;
