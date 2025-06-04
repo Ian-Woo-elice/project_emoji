@@ -693,40 +693,6 @@ select.form-control {
   padding-left: var(--space-32);
 }
 
-.platform-filter {
-  display: flex;
-  flex-direction: column;
-}
-
-.filter-title {
-  font-size: var(--font-size-md);
-  margin-bottom: var(--space-8);
-  font-weight: var(--font-weight-medium);
-}
-
-.platform-checkbox {
-  display: flex;
-  align-items: center;
-  padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-full);
-  background-color: var(--color-secondary);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-standard);
-}
-
-.platform-checkbox:hover {
-  background-color: var(--color-secondary-hover);
-}
-
-.platform-checkbox input {
-  margin-right: var(--space-6);
-}
-
-.platform-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-}
-
 /* Categories Navigation */
 .categories-nav {
   margin-bottom: var(--space-16);
@@ -933,26 +899,22 @@ select.form-control {
   border-radius: var(--radius-sm);
 }
 
-.platform-support {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-8);
 }
 
-.platform-badge {
   padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
 }
 
-.platform-supported {
   background-color: rgba(var(--color-success-rgb), var(--status-bg-opacity));
   color: var(--color-success);
   border: 1px solid rgba(var(--color-success-rgb), var(--status-border-opacity));
 }
 
-.platform-unsupported {
   background-color: rgba(var(--color-error-rgb), var(--status-bg-opacity));
   color: var(--color-error);
   border: 1px solid rgba(var(--color-error-rgb), var(--status-border-opacity));
@@ -967,30 +929,6 @@ select.form-control {
 .toast {
   position: fixed;
   bottom: var(--space-24);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
-
-.toast-content {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-base);
-  padding: var(--space-12) var(--space-16);
-  box-shadow: var(--shadow-md);
-}
-
-.toast-icon {
-  color: var(--color-success);
-}
-
-/* Theme toggle */
-#theme-toggle {
-  display: flex;
-  align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
