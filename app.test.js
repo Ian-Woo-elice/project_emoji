@@ -25,7 +25,7 @@ describe('showCopyIndicator', () => {
     expect(indicator).not.toBeNull();
     expect(indicator.textContent).toBe('복사 완료');
 
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(2000);
     expect(emojiItem.querySelector('.copy-indicator')).toBeNull();
   });
 });

@@ -791,7 +791,8 @@ select.form-control {
   font-size: var(--font-size-xs);
   pointer-events: none;
   white-space: nowrap;
-  animation: fade-out 1s forwards;
+  /* Remain visible briefly before fading out */
+  animation: fade-out 1s 1s forwards;
   opacity: 0;
   animation: fade-out var(--duration-normal) forwards;
 

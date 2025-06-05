@@ -298,7 +298,7 @@ function copyToClipboard(text) {
 
 // 대체 복사 방법
 function fallbackCopy(text) {
-  const textArea = document.createElement('textarea');
+  }, 2000);
   textArea.value = text;
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
