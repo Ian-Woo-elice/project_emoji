@@ -11,7 +11,25 @@ const categoryMap = {
   "Activities": { id: "activities", name: "활동" },
   "Objects": { id: "objects", name: "물건" },
   "Symbols": { id: "symbols", name: "기호" },
-  "Flags": { id: "flags", name: "국기" }
+  "Flags": { id: "flags", name: "국기" },
+  "문장 부호": { id: "punctuation", name: "문장 부호" },
+  "괄호": { id: "brackets", name: "괄호" },
+  "수학 기호": { id: "math", name: "수학 기호" },
+  "단위 기호": { id: "units", name: "단위 기호" },
+  "도형 문자": { id: "shapes", name: "도형 문자" },
+  "괘선 문자": { id: "box", name: "괘선 문자" },
+  "원 문자/괄호 문자(한글)": { id: "circled-hangul", name: "원/괄호 문자(한글)" },
+  "원 문자/괄호 문자(영/숫자)": { id: "circled-latin", name: "원/괄호 문자(영/숫자)" },
+  "전각 숫자(아라비아/로마)": { id: "fullwidth-num", name: "전각 숫자" },
+  "분수/첨자": { id: "fractions", name: "분수/첨자" },
+  "현대 한글 낱자": { id: "hangul-modern", name: "현대 한글 낱자" },
+  "옛한글 낱자": { id: "hangul-old", name: "옛한글 낱자" },
+  "전각 로마자": { id: "fullwidth-latin", name: "전각 로마자" },
+  "그리스 문자": { id: "greek", name: "그리스 문자" },
+  "확장 라틴 문자": { id: "latin-ext", name: "확장 라틴 문자" },
+  "히라가나": { id: "hiragana", name: "히라가나" },
+  "가타카나": { id: "katakana", name: "가타카나" },
+  "키릴 문자": { id: "cyrillic", name: "키릴 문자" }
 };
 
 // 코드 포인트 문자열 생성
@@ -30,8 +48,11 @@ function toCodePoint(emoji) {
 
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
-  const res = await fetch('emoji.json');
-  const data = await res.json();
+  const [res, extraRes] = await Promise.all([
+    fetch('emoji.json'),
+    fetch('special_chars.json')
+  ]);
+  const data = [...await res.json(), ...await extraRes.json()];
   const categories = {};
 
   data.forEach(item => {
