@@ -11,7 +11,25 @@ const categoryMap = {
   "Activities": { id: "activities", name: "활동" },
   "Objects": { id: "objects", name: "물건" },
   "Symbols": { id: "symbols", name: "기호" },
-  "Flags": { id: "flags", name: "국기" }
+  "Flags": { id: "flags", name: "국기" },
+  "문장 부호": { id: "punctuation", name: "문장 부호" },
+  "괄호": { id: "brackets", name: "괄호" },
+  "수학 기호": { id: "math", name: "수학 기호" },
+  "단위 기호": { id: "units", name: "단위 기호" },
+  "도형 문자": { id: "shapes", name: "도형 문자" },
+  "괘선 문자": { id: "box", name: "괘선 문자" },
+  "원 문자/괄호 문자(한글)": { id: "circled-hangul", name: "원/괄호 문자(한글)" },
+  "원 문자/괄호 문자(영/숫자)": { id: "circled-latin", name: "원/괄호 문자(영/숫자)" },
+  "전각 숫자(아라비아/로마)": { id: "fullwidth-num", name: "전각 숫자" },
+  "분수/첨자": { id: "fractions", name: "분수/첨자" },
+  "현대 한글 낱자": { id: "hangul-modern", name: "현대 한글 낱자" },
+  "옛한글 낱자": { id: "hangul-old", name: "옛한글 낱자" },
+  "전각 로마자": { id: "fullwidth-latin", name: "전각 로마자" },
+  "그리스 문자": { id: "greek", name: "그리스 문자" },
+  "확장 라틴 문자": { id: "latin-ext", name: "확장 라틴 문자" },
+  "히라가나": { id: "hiragana", name: "히라가나" },
+  "가타카나": { id: "katakana", name: "가타카나" },
+  "키릴 문자": { id: "cyrillic", name: "키릴 문자" }
 };
 
 // 코드 포인트 문자열 생성
@@ -21,10 +39,20 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
+// 트윗이 제공하는 형식으로 코드 포인트 문자열 반환
+function toCodePoint(emoji) {
+  return Array.from(emoji)
+    .map(ch => ch.codePointAt(0).toString(16))
+    .join('-');
+}
+
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
-  const res = await fetch('emoji.json');
-  const data = await res.json();
+  const [res, extraRes] = await Promise.all([
+    fetch('emoji.json'),
+    fetch('special_chars.json')
+  ]);
+  const data = [...await res.json(), ...await extraRes.json()];
   const categories = {};
 
   data.forEach(item => {
@@ -41,7 +69,8 @@ async function loadEmojiData() {
       emoji: item.emoji,
       name: item.description,
       unicode: toUnicodeString(item.emoji),
-      version: item.unicode_version || ''
+      version: item.unicode_version || '',
+      categoryId: map.id
     });
   });
 
@@ -204,6 +233,7 @@ function setupEventListeners() {
         showEmojiModal(emoji);
       } else {
         // 이모지 클릭 시 복사 후 표시
+        copyEmoji(emoji, emojiItem);
         copyToClipboard(emoji.emoji);
         showCopyIndicator(emojiItem);
       }
@@ -289,7 +319,7 @@ function copyToClipboard(text) {
 
 // 대체 복사 방법
 function fallbackCopy(text) {
-  const textArea = document.createElement('textarea');
+  }, 2000);
   textArea.value = text;
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
@@ -317,6 +347,30 @@ function showCopyIndicator(emojiItem) {
   setTimeout(() => {
     emojiItem.removeChild(indicator);
   }, 1000);
+}
+
+// 이모지를 클립보드에 복사
+async function copyEmoji(emoji, emojiItem) {
+  if (
+    emoji.categoryId === 'flags' &&
+    navigator.clipboard &&
+    navigator.clipboard.write
+  ) {
+    const code = toCodePoint(emoji.emoji);
+    const url = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${code}.svg`;
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob })
+      ]);
+    } catch (err) {
+      copyToClipboard(emoji.emoji);
+    }
+  } else {
+    copyToClipboard(emoji.emoji);
+  }
+  showCopyIndicator(emojiItem);
 }
 
 
@@ -368,4 +422,6 @@ function loadThemePreference() {
 // 앱 초기화
 document.addEventListener('DOMContentLoaded', init);
 
+export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
 export { showCopyIndicator, toggleTheme, loadThemePreference };
+
