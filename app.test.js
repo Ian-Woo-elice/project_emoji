@@ -4,6 +4,7 @@ import { jest } from '@jest/globals';
 let showCopyIndicator;
 let loadEmojiData;
 let emojiData;
+let loadCategories;
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
@@ -62,5 +63,20 @@ describe('loadEmojiData', () => {
     await loadEmojiData();
     const categoryNames = emojiData.emojiCategories.map((c) => c.name);
     expect(categoryNames).toContain('문장 부호');
+  });
+});
+
+describe('loadCategories', () => {
+  beforeEach(async () => {
+    jest.resetModules();
+    document.body.innerHTML = '<select id="category-select"></select>';
+    ({ loadEmojiData, loadCategories, emojiData } = await import('./app.js'));
+    await loadEmojiData();
+  });
+
+  test('populates category options', () => {
+    loadCategories();
+    const select = document.getElementById('category-select');
+    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
   });
 });
