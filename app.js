@@ -319,7 +319,7 @@ function copyToClipboard(text) {
 
 // 대체 복사 방법
 function fallbackCopy(text) {
-  }, 2000);
+  const textArea = document.createElement('textarea');
   textArea.value = text;
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
@@ -347,7 +347,6 @@ function showCopyIndicator(emojiItem) {
   setTimeout(() => {
     emojiItem.removeChild(indicator);
   }, 2000);
-  }, 1000);
 }
 
 // 이모지를 클립보드에 복사
@@ -424,6 +423,12 @@ function loadThemePreference() {
 document.addEventListener('DOMContentLoaded', init);
 
 
-export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint, loadEmojiData, emojiData };
-export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
-export { showCopyIndicator, toggleTheme, loadThemePreference };
+export {
+  showCopyIndicator,
+  toggleTheme,
+  loadThemePreference,
+  copyEmoji,
+  toCodePoint,
+  loadEmojiData,
+  emojiData
+};
