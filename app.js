@@ -234,6 +234,8 @@ function setupEventListeners() {
       } else {
         // 이모지 클릭 시 복사 후 표시
         copyEmoji(emoji, emojiItem);
+        copyToClipboard(emoji.emoji);
+        showCopyIndicator(emojiItem);
       }
     }
   });
@@ -317,7 +319,7 @@ function copyToClipboard(text) {
 
 // 대체 복사 방법
 function fallbackCopy(text) {
-  const textArea = document.createElement('textarea');
+  }, 2000);
   textArea.value = text;
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
@@ -345,6 +347,7 @@ function showCopyIndicator(emojiItem) {
   setTimeout(() => {
     emojiItem.removeChild(indicator);
   }, 2000);
+  }, 1000);
 }
 
 // 이모지를 클립보드에 복사
@@ -420,4 +423,7 @@ function loadThemePreference() {
 // 앱 초기화
 document.addEventListener('DOMContentLoaded', init);
 
+
 export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint, loadEmojiData, emojiData };
+export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
+export { showCopyIndicator, toggleTheme, loadThemePreference };
