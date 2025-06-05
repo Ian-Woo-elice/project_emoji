@@ -395,7 +395,7 @@ function saveThemePreference(theme) {
 function updateThemeToggleIcon(theme) {
   if (!elements.themeToggle) return;
   const moon = elements.themeToggle.querySelector('.fa-moon');
-  const sun = elements.themeToggle.querySelector('.fa-sun');
+export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint, loadEmojiData, emojiData };
   if (moon && sun) {
     if (theme === 'dark') {
       moon.style.display = 'none';
