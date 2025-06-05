@@ -346,6 +346,7 @@ function showCopyIndicator(emojiItem) {
 
   setTimeout(() => {
     emojiItem.removeChild(indicator);
+  }, 2000);
   }, 1000);
 }
 
@@ -422,6 +423,7 @@ function loadThemePreference() {
 // 앱 초기화
 document.addEventListener('DOMContentLoaded', init);
 
+
+export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint, loadEmojiData, emojiData };
 export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
 export { showCopyIndicator, toggleTheme, loadThemePreference };
-
