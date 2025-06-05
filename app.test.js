@@ -4,10 +4,6 @@ import { jest } from '@jest/globals';
 let showCopyIndicator;
 let loadEmojiData;
 let emojiData;
-import {TextEncoder, TextDecoder} from 'util';
-import {jest} from '@jest/globals';
-
-let showCopyIndicator;
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
