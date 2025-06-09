@@ -29,7 +29,8 @@ const categoryMap = {
   "확장 라틴 문자": { id: "latin-ext", name: "확장 라틴 문자" },
   "히라가나": { id: "hiragana", name: "히라가나" },
   "가타카나": { id: "katakana", name: "가타카나" },
-  "키릴 문자": { id: "cyrillic", name: "키릴 문자" }
+  "키릴 문자": { id: "cyrillic", name: "키릴 문자" },
+  "이모티콘": { id: "kaomoji", name: "이모티콘" }
 };
 
 // 코드 포인트 문자열 생성
@@ -48,11 +49,16 @@ function toCodePoint(emoji) {
 
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
-  const [res, extraRes] = await Promise.all([
+  const [res, extraRes, emoticonRes] = await Promise.all([
     fetch('emoji.json'),
-    fetch('special_chars.json')
+    fetch('special_chars.json'),
+    fetch('emoticons.json')
   ]);
-  const data = [...await res.json(), ...await extraRes.json()];
+  const data = [
+    ...await res.json(),
+    ...await extraRes.json(),
+    ...await emoticonRes.json()
+  ];
   const categories = {};
 
   data.forEach(item => {
