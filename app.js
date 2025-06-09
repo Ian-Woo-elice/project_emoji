@@ -70,6 +70,12 @@ async function loadEmojiData() {
     ...emojiList,
     ...extraList,
     ...emoticons
+=======
+  ]);
+  const data = [
+    ...emojiList,
+    ...extraList,
+    ...emoticons
   const [res, extraRes, emoticonRes] = await Promise.all([
     fetch('emoji.json'),
     fetch('special_chars.json'),
@@ -441,7 +447,22 @@ function loadThemePreference() {
 }
 
 // 앱 초기화
-document.addEventListener('DOMContentLoaded', init);
+// DOMContentLoaded 이벤트 발생 여부에 상관없이 초기화
+function maybeInit() {
+  if (
+    document.getElementById('emoji-container') &&
+    document.getElementById('category-select') &&
+    document.getElementById('emoji-search')
+  ) {
+    init();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', maybeInit);
+} else {
+  maybeInit();
+}
 
 
 export {
