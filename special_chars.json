@@ -285,6 +285,7 @@
   {"emoji": "Ё", "description": "cyrillic capital letter io", "category": "키릴 문자"},
   {"emoji": "Ж", "description": "cyrillic capital letter zhe", "category": "키릴 문자"},
   {"emoji": "З", "description": "cyrillic capital letter ze", "category": "키릴 문자"},
+  {"emoji": "И", "description": "cyrillic capital letter i", "category": "키릴 문자"}
   {"emoji": "И", "description": "cyrillic capital letter i", "category": "키릴 문자"},
 
   {"emoji": "Ⅰ", "description": "roman numeral one", "category": "로마 숫자"},

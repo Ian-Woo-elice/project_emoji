@@ -40,14 +40,13 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
-// 트윗이 제공하는 형식으로 코드 포인트 문자열 반환
 function toCodePoint(emoji) {
   return Array.from(emoji)
     .map(ch => ch.codePointAt(0).toString(16))
     .join('-');
 }
 
-// JSON 파일을 안전하게 로드
+// JSON 파일 안전하게 로드
 async function fetchJson(path) {
   try {
     const res = await fetch(path);
@@ -59,7 +58,7 @@ async function fetchJson(path) {
   }
 }
 
-// 이모지 데이터를 로드하고 카테고리별로 그룹화
+// 이모지 데이터를 로드하고 카테고리별 그룹화
 async function loadEmojiData() {
   const [emojiList, extraList, emoticons] = await Promise.all([
     fetchJson('emoji.json'),
@@ -121,7 +120,7 @@ const elements = {
   themeToggle: document.getElementById('theme-toggle')
 };
 
-// 초기화 함수
+// 초기화
 async function init() {
   await loadEmojiData();
   loadCategories();
@@ -171,6 +170,11 @@ function renderEmojis() {
       elements.emojiContainer.appendChild(section);
 
       const gridElement = section.querySelector('.emoji-grid');
+      gridElement.classList.remove('kaomoji-grid');
+
+      if (category.id === 'kaomoji') {
+        gridElement.classList.add('kaomoji-grid');
+      }
 
       category.emojis.forEach(emoji => {
         const emojiItem = document.createElement('div');
@@ -212,7 +216,7 @@ function getFilteredCategories() {
   }).filter(category => category.emojis.length > 0);
 }
 
-// 이벤트 리스너 설정
+// 이벤트 리스너
 function setupEventListeners() {
   elements.categorySelect.addEventListener('change', (e) => {
     filterState.currentCategory = e.target.value;
@@ -279,7 +283,7 @@ function setupEventListeners() {
   });
 }
 
-// 모달 관련 함수들
+// 모달 관련
 function showEmojiModal(emoji) {
   if (!elements.modal.container) return;
 
@@ -297,6 +301,7 @@ function hideEmojiModal() {
   }
 }
 
+// 클립보드
 function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text)
@@ -362,7 +367,7 @@ async function copyEmoji(emoji, emojiItem) {
   showCopyIndicator(emojiItem);
 }
 
-// 테마 전환 관련
+// 테마 전환
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-color-scheme') || 'light';
   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -421,7 +426,6 @@ if (document.readyState === 'loading') {
   maybeInit();
 }
 
-// Export
 export {
   showCopyIndicator,
   toggleTheme,
@@ -430,5 +434,7 @@ export {
   toCodePoint,
   loadCategories,
   loadEmojiData,
-  emojiData
+  emojiData,
+  renderEmojis,
+  filterState
 };

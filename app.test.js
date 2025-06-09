@@ -1,10 +1,11 @@
-import { TextEncoder, TextDecoder } from 'util';
 import { jest } from '@jest/globals';
 
 let showCopyIndicator;
 let loadEmojiData;
 let emojiData;
 let loadCategories;
+let renderEmojis;
+let filterState;
 
 // TextEncoder / TextDecoder global 등록
 beforeAll(() => {
@@ -32,7 +33,7 @@ describe('showCopyIndicator', () => {
 });
 
 describe('loadEmojiData', () => {
-  const originalFetch = global.fetch; // fetch 원본 저장
+  const originalFetch = global.fetch; // 원본 저장
 
   beforeEach(() => {
     global.fetch = jest.fn((url) => {
@@ -66,7 +67,7 @@ describe('loadEmojiData', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    global.fetch = originalFetch; // fetch 복원
+    global.fetch = originalFetch; // 복원
   });
 
   test('includes special character category', async () => {
@@ -96,5 +97,53 @@ describe('loadCategories', () => {
     loadCategories();
     const select = document.getElementById('category-select');
     expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // '전체' 포함
+  });
+});
+
+describe('kaomoji grid responsiveness', () => {
+  beforeEach(async () => {
+    jest.resetModules();
+    document.body.innerHTML = `
+      <select id="category-select"></select>
+      <div id="emoji-container"></div>
+    `;
+    global.fetch = jest.fn((url) => {
+      if (url === 'emoji.json') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([
+            { emoji: '🙂', description: 'smile', category: 'Smileys & Emotion' }
+          ])
+        });
+      }
+      if (url === 'special_chars.json') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([
+            { emoji: '…', description: 'ellipsis', category: '문장 부호' }
+          ])
+        });
+      }
+      if (url === 'emoticons.json') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([
+            { emoji: '(･ω･)', description: 'happy', category: '이모티콘' }
+          ])
+        });
+      }
+      return Promise.reject(new Error('unknown url'));
+    });
+
+    ({ loadEmojiData, loadCategories, renderEmojis, filterState } = await import('./app.js'));
+    await loadEmojiData();
+    loadCategories();
+    filterState.currentCategory = 'kaomoji';
+  });
+
+  test('adds kaomoji-grid class when emoticon category selected', () => {
+    renderEmojis();
+    const grid = document.querySelector('.emoji-grid');
+    expect(grid.classList.contains('kaomoji-grid')).toBe(true);
   });
 });
