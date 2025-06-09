@@ -70,6 +70,21 @@ async function loadEmojiData() {
     ...emojiList,
     ...extraList,
     ...emoticons
+=======
+  ]);
+  const data = [
+    ...emojiList,
+    ...extraList,
+    ...emoticons
+  const [res, extraRes, emoticonRes] = await Promise.all([
+    fetch('emoji.json'),
+    fetch('special_chars.json'),
+    fetch('emoticons.json')
+  ]);
+  const data = [
+    ...await res.json(),
+    ...await extraRes.json(),
+    ...await emoticonRes.json()
   ];
   const categories = {};
 
