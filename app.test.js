@@ -4,10 +4,7 @@ import { jest } from '@jest/globals';
 let showCopyIndicator;
 let loadEmojiData;
 let emojiData;
-import {TextEncoder, TextDecoder} from 'util';
-import {jest} from '@jest/globals';
-
-let showCopyIndicator;
+let loadCategories;
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
@@ -53,6 +50,13 @@ describe('loadEmojiData', () => {
           ])
         });
       }
+      if (url === 'emoticons.json') {
+        return Promise.resolve({
+          json: () => Promise.resolve([
+            { emoji: '(･ω･)', description: 'happy', category: '이모티콘' }
+          ])
+        });
+      }
       return Promise.reject(new Error('unknown url'));
     });
   });
@@ -66,5 +70,27 @@ describe('loadEmojiData', () => {
     await loadEmojiData();
     const categoryNames = emojiData.emojiCategories.map((c) => c.name);
     expect(categoryNames).toContain('문장 부호');
+  });
+
+  test('includes emoticon category', async () => {
+    ({ loadEmojiData, emojiData } = await import('./app.js'));
+    await loadEmojiData();
+    const categoryNames = emojiData.emojiCategories.map((c) => c.name);
+    expect(categoryNames).toContain('이모티콘');
+  });
+});
+
+describe('loadCategories', () => {
+  beforeEach(async () => {
+    jest.resetModules();
+    document.body.innerHTML = '<select id="category-select"></select>';
+    ({ loadEmojiData, loadCategories, emojiData } = await import('./app.js'));
+    await loadEmojiData();
+  });
+
+  test('populates category options', () => {
+    loadCategories();
+    const select = document.getElementById('category-select');
+    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
   });
 });

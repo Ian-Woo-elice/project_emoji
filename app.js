@@ -29,7 +29,8 @@ const categoryMap = {
   "확장 라틴 문자": { id: "latin-ext", name: "확장 라틴 문자" },
   "히라가나": { id: "hiragana", name: "히라가나" },
   "가타카나": { id: "katakana", name: "가타카나" },
-  "키릴 문자": { id: "cyrillic", name: "키릴 문자" }
+  "키릴 문자": { id: "cyrillic", name: "키릴 문자" },
+  "이모티콘": { id: "kaomoji", name: "이모티콘" }
 };
 
 // 코드 포인트 문자열 생성
@@ -48,11 +49,16 @@ function toCodePoint(emoji) {
 
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
-  const [res, extraRes] = await Promise.all([
+  const [res, extraRes, emoticonRes] = await Promise.all([
     fetch('emoji.json'),
-    fetch('special_chars.json')
+    fetch('special_chars.json'),
+    fetch('emoticons.json')
   ]);
-  const data = [...await res.json(), ...await extraRes.json()];
+  const data = [
+    ...await res.json(),
+    ...await extraRes.json(),
+    ...await emoticonRes.json()
+  ];
   const categories = {};
 
   data.forEach(item => {
@@ -86,7 +92,7 @@ const filterState = {
 // DOM 요소
 const elements = {
   emojiContainer: document.getElementById('emoji-container'),
-  categoriesList: document.getElementById('categories-list'),
+  categorySelect: document.getElementById('category-select'),
   searchInput: document.getElementById('emoji-search'),
   modal: {
     container: document.getElementById('emoji-modal'),
@@ -112,18 +118,18 @@ async function init() {
 
 // 카테고리 로드
 function loadCategories() {
-  // '전체' 카테고리 추가
-  const allCategoryItem = document.createElement('li');
-  allCategoryItem.className = 'category-item';
-  allCategoryItem.innerHTML = `<button class="category-btn active" data-category="all">전체</button>`;
-  elements.categoriesList.appendChild(allCategoryItem);
+  // '전체' 카테고리 옵션 추가
+  const allOption = document.createElement('option');
+  allOption.value = 'all';
+  allOption.textContent = '전체';
+  elements.categorySelect.appendChild(allOption);
 
-  // 데이터에서 카테고리 추가
+  // 데이터에서 카테고리 옵션 추가
   emojiData.emojiCategories.forEach(category => {
-    const categoryItem = document.createElement('li');
-    categoryItem.className = 'category-item';
-    categoryItem.innerHTML = `<button class="category-btn" data-category="${category.id}">${category.name}</button>`;
-    elements.categoriesList.appendChild(categoryItem);
+    const option = document.createElement('option');
+    option.value = category.id;
+    option.textContent = category.name;
+    elements.categorySelect.appendChild(option);
   });
 }
 
@@ -203,15 +209,9 @@ function getFilteredCategories() {
 // 이벤트 리스너 설정
 function setupEventListeners() {
   // 카테고리 전환
-  elements.categoriesList.addEventListener('click', (e) => {
-    if (e.target.classList.contains('category-btn')) {
-      const categoryButtons = document.querySelectorAll('.category-btn');
-      categoryButtons.forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      
-      filterState.currentCategory = e.target.dataset.category;
-      renderEmojis();
-    }
+  elements.categorySelect.addEventListener('change', (e) => {
+    filterState.currentCategory = e.target.value;
+    renderEmojis();
   });
 
   // 검색 입력 - 실시간 검색
@@ -319,7 +319,7 @@ function copyToClipboard(text) {
 
 // 대체 복사 방법
 function fallbackCopy(text) {
-  }, 2000);
+  const textArea = document.createElement('textarea');
   textArea.value = text;
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
@@ -347,7 +347,6 @@ function showCopyIndicator(emojiItem) {
   setTimeout(() => {
     emojiItem.removeChild(indicator);
   }, 2000);
-  }, 1000);
 }
 
 // 이모지를 클립보드에 복사
@@ -424,6 +423,13 @@ function loadThemePreference() {
 document.addEventListener('DOMContentLoaded', init);
 
 
-export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint, loadEmojiData, emojiData };
-export { showCopyIndicator, toggleTheme, loadThemePreference, copyEmoji, toCodePoint };
-export { showCopyIndicator, toggleTheme, loadThemePreference };
+export {
+  showCopyIndicator,
+  toggleTheme,
+  loadThemePreference,
+  copyEmoji,
+  toCodePoint,
+  loadCategories,
+  loadEmojiData,
+  emojiData
+};
