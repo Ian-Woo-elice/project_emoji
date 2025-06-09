@@ -47,8 +47,29 @@ function toCodePoint(emoji) {
     .join('-');
 }
 
+// JSON 파일을 안전하게 로드
+async function fetchJson(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(res.statusText);
+    return await res.json();
+  } catch (err) {
+    console.error(`Failed to load ${path}:`, err);
+    return [];
+  }
+}
+
 // 이모지 데이터를 로드하고 카테고리별로 그룹화
 async function loadEmojiData() {
+  const [emojiList, extraList, emoticons] = await Promise.all([
+    fetchJson('emoji.json'),
+    fetchJson('special_chars.json'),
+    fetchJson('emoticons.json')
+  ]);
+  const data = [
+    ...emojiList,
+    ...extraList,
+    ...emoticons
   const [res, extraRes, emoticonRes] = await Promise.all([
     fetch('emoji.json'),
     fetch('special_chars.json'),
