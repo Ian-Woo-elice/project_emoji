@@ -38,6 +38,7 @@ describe('loadEmojiData', () => {
     global.fetch = jest.fn((url) => {
       if (url === 'emoji.json') {
         return Promise.resolve({
+          ok: true,
           json: () => Promise.resolve([
             { emoji: '🙂', description: 'smile', category: 'Smileys & Emotion' }
           ])
@@ -45,6 +46,7 @@ describe('loadEmojiData', () => {
       }
       if (url === 'special_chars.json') {
         return Promise.resolve({
+          ok: true,
           json: () => Promise.resolve([
             { emoji: '…', description: 'ellipsis', category: '문장 부호' }
           ])
@@ -52,6 +54,7 @@ describe('loadEmojiData', () => {
       }
       if (url === 'emoticons.json') {
         return Promise.resolve({
+          ok: true,
           json: () => Promise.resolve([
             { emoji: '(･ω･)', description: 'happy', category: '이모티콘' }
           ])
