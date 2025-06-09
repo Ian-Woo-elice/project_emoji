@@ -97,3 +97,18 @@ describe('loadCategories', () => {
     expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
   });
 });
+
+describe('loadCategories', () => {
+  beforeEach(async () => {
+    jest.resetModules();
+    document.body.innerHTML = '<select id="category-select"></select>';
+    ({ loadEmojiData, loadCategories, emojiData } = await import('./app.js'));
+    await loadEmojiData();
+  });
+
+  test('populates category options', () => {
+    loadCategories();
+    const select = document.getElementById('category-select');
+    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
+  });
+});
