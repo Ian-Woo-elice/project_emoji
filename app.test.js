@@ -7,11 +7,16 @@ let loadCategories;
 let renderEmojis;
 let filterState;
 
+// TextEncoder / TextDecoder global 등록
+beforeAll(() => {
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
+});
+
 describe('showCopyIndicator', () => {
   beforeEach(() => {
     jest.useFakeTimers();
   });
-
 
   test('creates and removes indicator', async () => {
     document.body.innerHTML = '<div class="emoji-item"></div>';
@@ -28,6 +33,8 @@ describe('showCopyIndicator', () => {
 });
 
 describe('loadEmojiData', () => {
+  const originalFetch = global.fetch; // 원본 저장
+
   beforeEach(() => {
     global.fetch = jest.fn((url) => {
       if (url === 'emoji.json') {
@@ -60,6 +67,7 @@ describe('loadEmojiData', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    global.fetch = originalFetch; // 복원
   });
 
   test('includes special character category', async () => {
@@ -88,7 +96,7 @@ describe('loadCategories', () => {
   test('populates category options', () => {
     loadCategories();
     const select = document.getElementById('category-select');
-    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
+    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // '전체' 포함
   });
 });
 
@@ -126,6 +134,7 @@ describe('kaomoji grid responsiveness', () => {
       }
       return Promise.reject(new Error('unknown url'));
     });
+
     ({ loadEmojiData, loadCategories, renderEmojis, filterState } = await import('./app.js'));
     await loadEmojiData();
     loadCategories();

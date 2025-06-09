@@ -40,14 +40,13 @@ function toUnicodeString(emoji) {
     .join(' ');
 }
 
-// 트윗이 제공하는 형식으로 코드 포인트 문자열 반환
 function toCodePoint(emoji) {
   return Array.from(emoji)
     .map(ch => ch.codePointAt(0).toString(16))
     .join('-');
 }
 
-// JSON 파일을 안전하게 로드
+// JSON 파일 안전하게 로드
 async function fetchJson(path) {
   try {
     const res = await fetch(path);
@@ -59,18 +58,20 @@ async function fetchJson(path) {
   }
 }
 
-// 이모지 데이터를 로드하고 카테고리별로 그룹화
+// 이모지 데이터를 로드하고 카테고리별 그룹화
 async function loadEmojiData() {
   const [emojiList, extraList, emoticons] = await Promise.all([
     fetchJson('emoji.json'),
     fetchJson('special_chars.json'),
     fetchJson('emoticons.json')
   ]);
+
   const data = [
     ...emojiList,
     ...extraList,
     ...emoticons
   ];
+
   const categories = {};
 
   data.forEach(item => {
@@ -119,7 +120,7 @@ const elements = {
   themeToggle: document.getElementById('theme-toggle')
 };
 
-// 초기화 함수
+// 초기화
 async function init() {
   await loadEmojiData();
   loadCategories();
@@ -130,13 +131,11 @@ async function init() {
 
 // 카테고리 로드
 function loadCategories() {
-  // '전체' 카테고리 옵션 추가
   const allOption = document.createElement('option');
   allOption.value = 'all';
   allOption.textContent = '전체';
   elements.categorySelect.appendChild(allOption);
 
-  // 데이터에서 카테고리 옵션 추가
   emojiData.emojiCategories.forEach(category => {
     const option = document.createElement('option');
     option.value = category.id;
@@ -149,7 +148,6 @@ function loadCategories() {
 function renderEmojis() {
   elements.emojiContainer.innerHTML = '';
 
-  // 필터링된 이모지 가져오기
   const filteredCategories = getFilteredCategories();
 
   if (filteredCategories.length === 0 || filteredCategories.every(cat => cat.emojis.length === 0)) {
@@ -161,7 +159,6 @@ function renderEmojis() {
     return;
   }
 
-  // 카테고리별로 이모지 렌더링
   filteredCategories.forEach(category => {
     if (category.emojis.length > 0) {
       const section = document.createElement('div');
@@ -173,11 +170,12 @@ function renderEmojis() {
       elements.emojiContainer.appendChild(section);
 
       const gridElement = section.querySelector('.emoji-grid');
-      if (filterState.currentCategory === 'kaomoji') {
+      gridElement.classList.remove('kaomoji-grid');
+
+      if (category.id === 'kaomoji') {
         gridElement.classList.add('kaomoji-grid');
       }
-      
-      // 이모지 아이템 추가
+
       category.emojis.forEach(emoji => {
         const emojiItem = document.createElement('div');
         emojiItem.className = 'emoji-item';
@@ -195,16 +193,13 @@ function renderEmojis() {
 // 필터링된 카테고리 가져오기
 function getFilteredCategories() {
   let categories = emojiData.emojiCategories;
-  
-  // 특정 카테고리만 필터링
+
   if (filterState.currentCategory !== 'all') {
     categories = categories.filter(cat => cat.id === filterState.currentCategory);
   }
 
-  // 카테고리와 이모지 필터링
   return categories.map(category => {
     const filteredEmojis = category.emojis.filter(emoji => {
-      // 검색어 필터링 - 대소문자 구분 없이 검색
       const searchText = filterState.searchText.toLowerCase().trim();
       const searchMatch = searchText === '' ||
         emoji.name.toLowerCase().includes(searchText) ||
@@ -221,33 +216,27 @@ function getFilteredCategories() {
   }).filter(category => category.emojis.length > 0);
 }
 
-// 이벤트 리스너 설정
+// 이벤트 리스너
 function setupEventListeners() {
-  // 카테고리 전환
   elements.categorySelect.addEventListener('change', (e) => {
     filterState.currentCategory = e.target.value;
     renderEmojis();
   });
 
-  // 검색 입력 - 실시간 검색
   elements.searchInput.addEventListener('input', (e) => {
     filterState.searchText = e.target.value;
     renderEmojis();
   });
 
-
-  // 이모지 클릭 (복사)
   elements.emojiContainer.addEventListener('click', (e) => {
     const emojiItem = e.target.closest('.emoji-item');
     if (emojiItem) {
       const emoji = JSON.parse(emojiItem.dataset.emoji);
-      
-      // 정보 아이콘 클릭 시 모달 표시
+
       if (e.target.classList.contains('emoji-info')) {
         e.stopPropagation();
         showEmojiModal(emoji);
       } else {
-        // 이모지 클릭 시 복사 후 표시
         copyEmoji(emoji, emojiItem);
         copyToClipboard(emoji.emoji);
         showCopyIndicator(emojiItem);
@@ -255,14 +244,12 @@ function setupEventListeners() {
     }
   });
 
-  // 모달 닫기
   if (elements.modal.close) {
     elements.modal.close.addEventListener('click', () => {
       hideEmojiModal();
     });
   }
 
-  // 모달 외부 클릭 시 닫기
   if (elements.modal.container) {
     elements.modal.container.addEventListener('click', (e) => {
       if (e.target === elements.modal.container || e.target.classList.contains('modal-backdrop')) {
@@ -271,7 +258,6 @@ function setupEventListeners() {
     });
   }
 
-  // 모달 내 이모지 복사
   if (elements.modal.copyEmoji) {
     elements.modal.copyEmoji.addEventListener('click', () => {
       const emoji = elements.modal.emoji.textContent;
@@ -279,7 +265,6 @@ function setupEventListeners() {
     });
   }
 
-  // 모달 내 유니코드 복사
   if (elements.modal.copyUnicode) {
     elements.modal.copyUnicode.addEventListener('click', () => {
       const unicode = elements.modal.unicode.textContent;
@@ -287,12 +272,10 @@ function setupEventListeners() {
     });
   }
 
-  // 테마 전환
   if (elements.themeToggle) {
     elements.themeToggle.addEventListener('click', toggleTheme);
   }
 
-  // ESC 키로 모달 닫기
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && elements.modal.container && !elements.modal.container.classList.contains('hidden')) {
       hideEmojiModal();
@@ -300,26 +283,25 @@ function setupEventListeners() {
   });
 }
 
-// 이모지 모달 표시
+// 모달 관련
 function showEmojiModal(emoji) {
   if (!elements.modal.container) return;
-  
+
   elements.modal.emoji.textContent = emoji.emoji;
   elements.modal.title.textContent = emoji.name;
   elements.modal.unicode.textContent = emoji.unicode;
   elements.modal.version.textContent = `Emoji ${emoji.version}`;
-  
+
   elements.modal.container.classList.remove('hidden');
 }
 
-// 이모지 모달 숨기기
 function hideEmojiModal() {
   if (elements.modal.container) {
     elements.modal.container.classList.add('hidden');
   }
 }
 
-// 클립보드에 복사
+// 클립보드
 function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text)
@@ -332,7 +314,6 @@ function copyToClipboard(text) {
   }
 }
 
-// 대체 복사 방법
 function fallbackCopy(text) {
   const textArea = document.createElement('textarea');
   textArea.value = text;
@@ -342,17 +323,16 @@ function fallbackCopy(text) {
   document.body.appendChild(textArea);
   textArea.focus();
   textArea.select();
-  
+
   try {
     document.execCommand('copy');
   } catch (err) {
     console.error('대체 복사 방법 실패:', err);
   }
-  
+
   document.body.removeChild(textArea);
 }
 
-// 클릭한 이모지 위에 복사 완료 표시
 function showCopyIndicator(emojiItem) {
   const indicator = document.createElement('div');
   indicator.className = 'copy-indicator';
@@ -364,7 +344,6 @@ function showCopyIndicator(emojiItem) {
   }, 2000);
 }
 
-// 이모지를 클립보드에 복사
 async function copyEmoji(emoji, emojiItem) {
   if (
     emoji.categoryId === 'flags' &&
@@ -388,7 +367,6 @@ async function copyEmoji(emoji, emojiItem) {
   showCopyIndicator(emojiItem);
 }
 
-
 // 테마 전환
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-color-scheme') || 'light';
@@ -399,14 +377,12 @@ function toggleTheme() {
   updateThemeToggleIcon(newTheme);
 }
 
-// 테마 선호도 저장 (localStorage 대신 단순 변수 사용)
 let currentTheme = 'light';
 
 function saveThemePreference(theme) {
   currentTheme = theme;
 }
 
-// 테마 버튼 아이콘 업데이트
 function updateThemeToggleIcon(theme) {
   if (!elements.themeToggle) return;
   const moon = elements.themeToggle.querySelector('.fa-moon');
@@ -422,7 +398,6 @@ function updateThemeToggleIcon(theme) {
   }
 }
 
-// 테마 선호도 로드
 function loadThemePreference() {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.setAttribute('data-color-scheme', 'dark');
@@ -435,7 +410,6 @@ function loadThemePreference() {
 }
 
 // 앱 초기화
-// DOMContentLoaded 이벤트 발생 여부에 상관없이 초기화
 function maybeInit() {
   if (
     document.getElementById('emoji-container') &&
@@ -451,7 +425,6 @@ if (document.readyState === 'loading') {
 } else {
   maybeInit();
 }
-
 
 export {
   showCopyIndicator,
