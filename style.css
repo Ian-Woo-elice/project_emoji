@@ -696,43 +696,25 @@ select.form-control {
 /* Categories Navigation */
 .categories-nav {
   margin-bottom: var(--space-16);
-  border-bottom: 1px solid var(--color-border);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-.categories-list {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: var(--space-8);
-}
-
-.category-item {
-  white-space: nowrap;
-}
-
-.category-btn {
-  padding: var(--space-8) var(--space-16);
+.category-select {
+  width: 100%;
+  padding: var(--space-8);
   border-radius: var(--radius-base);
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  background-image: var(--select-caret-light);
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  appearance: none;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  transition: all var(--duration-fast) var(--ease-standard);
-}
-
-.category-btn:hover {
-  background-color: var(--color-secondary);
+  font-family: inherit;
   color: var(--color-text);
 }
 
-.category-btn.active {
-  background-color: var(--color-primary);
-  color: var(--color-btn-primary-text);
+[data-color-scheme="dark"] .category-select {
+  background-image: var(--select-caret-dark);
 }
 
 /* Emoji Display */
@@ -755,6 +737,17 @@ select.form-control {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
   gap: var(--space-8);
+}
+
+/* Kaomoji grid adjusts to emoticon length */
+.kaomoji-grid {
+  grid-template-columns: repeat(auto-fill, minmax(max-content, 1fr));
+}
+
+.kaomoji-grid .emoji-item {
+  height: auto;
+  min-height: 60px;
+  white-space: normal;
 }
 
 .emoji-item {
@@ -792,7 +785,6 @@ select.form-control {
   pointer-events: none;
   white-space: nowrap;
   /* Remain visible briefly before fading out */
-  animation: fade-out 1s 1s forwards;
   opacity: 0;
   animation: fade-out var(--duration-normal) forwards;
 }
