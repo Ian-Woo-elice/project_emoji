@@ -6,17 +6,15 @@ let loadEmojiData;
 let emojiData;
 let loadCategories;
 
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+// TextEncoder / TextDecoder global 등록
+beforeAll(() => {
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
+});
 
 describe('showCopyIndicator', () => {
   beforeEach(() => {
     jest.useFakeTimers();
-  });
-
-  beforeAll(() => {
-    global.TextEncoder = TextEncoder;
-    global.TextDecoder = TextDecoder;
   });
 
   test('creates and removes indicator', async () => {
@@ -34,6 +32,8 @@ describe('showCopyIndicator', () => {
 });
 
 describe('loadEmojiData', () => {
+  const originalFetch = global.fetch; // fetch 원본 저장
+
   beforeEach(() => {
     global.fetch = jest.fn((url) => {
       if (url === 'emoji.json') {
@@ -66,6 +66,7 @@ describe('loadEmojiData', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    global.fetch = originalFetch; // fetch 복원
   });
 
   test('includes special character category', async () => {
@@ -94,6 +95,6 @@ describe('loadCategories', () => {
   test('populates category options', () => {
     loadCategories();
     const select = document.getElementById('category-select');
-    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // 포함 '전체'
+    expect(select.options.length).toBe(emojiData.emojiCategories.length + 1); // '전체' 포함
   });
 });
