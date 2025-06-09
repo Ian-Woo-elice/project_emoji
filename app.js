@@ -408,7 +408,22 @@ function toggleTheme() {
 // 테마 선호도 저장 (localStorage 대신 단순 변수 사용)
 let currentTheme = 'light';
 
-function saveThemePreference(theme) {
+// DOMContentLoaded 이벤트 발생 여부에 상관없이 초기화
+function maybeInit() {
+  if (
+    document.getElementById('emoji-container') &&
+    document.getElementById('category-select') &&
+    document.getElementById('emoji-search')
+  ) {
+    init();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', maybeInit);
+} else {
+  maybeInit();
+}
   currentTheme = theme;
 }
 
