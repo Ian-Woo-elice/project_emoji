@@ -751,7 +751,7 @@ select.form-control {
   min-height: 60px;
   white-space: normal;
   padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg); /* ★ 여기 줄이는게 핵심 ★ */
   text-align: center;
 }
 
