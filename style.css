@@ -741,18 +741,26 @@ select.form-control {
 
 /* Kaomoji grid adjusts to emoticon length */
 .kaomoji-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-12);
+  justify-content: flex-start;
 }
 
 .kaomoji-page .kaomoji-grid .emoji-item {
-  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-12);
   min-height: 60px;
   white-space: normal;
-  padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-lg); /* ★ 여기 줄이는게 핵심 ★ */
+  font-size: var(--font-size-lg);
   text-align: center;
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .emoji-item {
