@@ -88,18 +88,6 @@
   {"emoji": "°", "description": "degree sign", "category": "단위 기호"},
   {"emoji": "％", "description": "fullwidth percent sign", "category": "단위 기호"},
 
-  {"emoji": "▲", "description": "black up-pointing triangle", "category": "도형 문자"},
-  {"emoji": "▼", "description": "black down-pointing triangle", "category": "도형 문자"},
-  {"emoji": "◆", "description": "black diamond", "category": "도형 문자"},
-  {"emoji": "■", "description": "black square", "category": "도형 문자"},
-  {"emoji": "●", "description": "black circle", "category": "도형 문자"},
-  {"emoji": "◎", "description": "bullseye", "category": "도형 문자"},
-  {"emoji": "◇", "description": "white diamond", "category": "도형 문자"},
-  {"emoji": "△", "description": "white up-pointing triangle", "category": "도형 문자"},
-  {"emoji": "▽", "description": "white down-pointing triangle", "category": "도형 문자"},
-  {"emoji": "★", "description": "black star", "category": "도형 문자"},
-  {"emoji": "☆", "description": "white star", "category": "도형 문자"},
-
   {"emoji": "─", "description": "box drawings light horizontal", "category": "괘선 문자"},
   {"emoji": "│", "description": "box drawings light vertical", "category": "괘선 문자"},
   {"emoji": "┌", "description": "box drawings light down and right", "category": "괘선 문자"},
