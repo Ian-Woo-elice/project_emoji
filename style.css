@@ -1001,3 +1001,15 @@ select.form-control {
     font-size: 2.5rem;
   }
 }
+
+/* Kaomoji page wider container */
+.kaomoji-page .container {
+  max-width: 1600px;
+}
+
+@media (min-width: 1920px) {
+  .kaomoji-page .container {
+    max-width: 1800px;
+  }
+}
+
