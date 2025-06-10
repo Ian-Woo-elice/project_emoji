@@ -755,7 +755,7 @@ select.form-control {
   padding: var(--space-8) var(--space-12);
   min-height: 60px;
   /* max-width: none; 제거 → 자유롭게 늘어나게 */
-  white-space: normal;
+  white-space: nowarp;
   font-size: var(--font-size-lg);
   text-align: center;
   border-radius: var(--radius-base);
