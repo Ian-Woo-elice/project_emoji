@@ -745,6 +745,7 @@ select.form-control {
   flex-wrap: wrap;
   gap: var(--space-12);
   justify-content: flex-start;
+  align-items: flex-start; /* 세로 정렬 안정화 */
 }
 
 .kaomoji-page .kaomoji-grid .emoji-item {
@@ -753,6 +754,7 @@ select.form-control {
   justify-content: center;
   padding: var(--space-8) var(--space-12);
   min-height: 60px;
+  /* max-width: none; 제거 → 자유롭게 늘어나게 */
   white-space: normal;
   font-size: var(--font-size-lg);
   text-align: center;
@@ -761,6 +763,7 @@ select.form-control {
   border: 1px solid var(--color-card-border);
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-standard);
+  /* word-break 제거 → 원본 텍스트 그대로 표시 */
 }
 
 .emoji-item {
