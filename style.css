@@ -742,7 +742,7 @@ select.form-control {
 /* Kaomoji grid adjusts to emoticon length */
 .kaomoji-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-12);
 }
 
@@ -752,6 +752,7 @@ select.form-control {
   white-space: normal;
   padding: var(--space-8) var(--space-12);
   font-size: var(--font-size-xl);
+  text-align: center;
 }
 
 .emoji-item {
