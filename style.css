@@ -739,17 +739,14 @@ select.form-control {
   gap: var(--space-8);
 }
 
-/* Kaomoji grid adjusts to emoticon length */
 .kaomoji-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-12);
-  justify-content: flex-start;
-  align-items: flex-start; /* 세로 정렬 안정화 */
+  display: block; /* ✅ 핵심 → grid / flex 를 없애고 block flow 사용 */
 }
 
 .kaomoji-page .kaomoji-grid .emoji-item {
-  display: inline-block; /* ✅ block → inline-block 으로 변경 */
+  display: inline-block; /* ✅ inline-block 으로 흐름 배치 */
+  vertical-align: top;
+  margin: var(--space-4); /* 간격 조절 */
   padding: var(--space-8) var(--space-12);
   white-space: pre;
   font-size: var(--font-size-lg);
@@ -759,19 +756,16 @@ select.form-control {
   border: 1px solid var(--color-card-border);
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-standard);
-  min-height: initial;
-  height: auto;
-  max-width: none; /* 기본은 제한 없음 */
+  max-width: 100%; /* 모바일 대응 */
   box-sizing: border-box;
 }
 
-/* 모바일 대응 */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .kaomoji-page .kaomoji-grid .emoji-item {
-    white-space: pre-wrap; /* ✅ 모바일에서는 줄바꿈 허용 → 화면 깨짐 방지 */
-    font-size: var(--font-size-base); /* 모바일에서 글자 약간 축소 */
-    padding: var(--space-6) var(--space-8); /* padding 축소 */
-    max-width: 100%; /* ✅ 모바일에서는 화면 너비 넘지 않도록 제한 */
+    white-space: pre-wrap;
+    font-size: var(--font-size-base);
+    padding: var(--space-6) var(--space-8);
+    max-width: 100%;
   }
 }
 
