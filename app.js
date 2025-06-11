@@ -179,6 +179,9 @@ function renderEmojis() {
       category.emojis.forEach(emoji => {
         const emojiItem = document.createElement('div');
         emojiItem.className = 'emoji-item';
+        if (category.id === 'kaomoji') {
+          emojiItem.classList.add('kaomoji-item');
+        }
         emojiItem.setAttribute('data-emoji', JSON.stringify(emoji));
         emojiItem.innerHTML = `
           <span class="emoji-char">${emoji.emoji}</span>

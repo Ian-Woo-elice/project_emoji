@@ -146,4 +146,10 @@ describe('kaomoji grid responsiveness', () => {
     const grid = document.querySelector('.emoji-grid');
     expect(grid.classList.contains('kaomoji-grid')).toBe(true);
   });
+
+  test('adds kaomoji-item class to emoticon entries', () => {
+    renderEmojis();
+    const items = document.querySelectorAll('.kaomoji-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
 });

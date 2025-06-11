@@ -741,17 +741,23 @@ select.form-control {
 
 /* Kaomoji grid adjusts to emoticon length */
 .kaomoji-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  /* Flex layout lets each emoticon size itself */
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-12);
 }
 
-.kaomoji-page .kaomoji-grid .emoji-item {
+.kaomoji-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: auto;
-  min-height: 60px;
+  min-height: 0;
   white-space: normal;
-  padding: var(--space-8) var(--space-12);
+  padding: var(--space-4) var(--space-8);
   font-size: var(--font-size-xl);
+  background: none;
+  border: none;
 }
 
 .emoji-item {
